@@ -1,0 +1,26 @@
+{
+  "name": "personal-db",
+  "version": "1.0.0",
+  "description": "This repository contains the web server that is used to communicate with my personal database.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jaysonc0421/personal-db.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jaysonc0421/personal-db/issues"
+  },
+  "homepage": "https://github.com/Jaysonc0421/personal-db#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1"
+  }
+}
