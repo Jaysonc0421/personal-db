@@ -40,8 +40,6 @@ must be protected by an authentication process.
 */
 
 // Every time the server is restarted, new tokens must be requested by clients
-const { jsonResponse } = require(path.join(__dirname, '/lib/responses.js'));
-
 app.tokens = [];
 
 // This function is called when a request is made to any path on the server
