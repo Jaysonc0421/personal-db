@@ -12,8 +12,7 @@ module.exports = (app, client) => {
         const valid = ('password' in req.body && req.body.password === process.env.PASSWORD);
 
         if(!provided || !valid) return res.status(403).json({
-            success: false,
-            message: (provided) ? 'Incorrect password' : 'Required json: password',
+            error: (provided) ? 'Incorrect password' : 'Required json: password',
         });
 
         // Generate a token. Just in case, make sure it does not already exist
@@ -26,10 +25,7 @@ module.exports = (app, client) => {
 
         app.tokens.push(token);
 
-        res.json({
-            success: true,
-            token: token,
-        });
+        res.json({ token: token });
 
     });
 

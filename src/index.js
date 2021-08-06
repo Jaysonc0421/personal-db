@@ -40,7 +40,7 @@ must be protected by an authentication process.
 */
 
 // Every time the server is restarted, new tokens must be requested by clients
-const { randomBytes } = require('crypto');
+const { jsonResponse } = require(path.join(__dirname, '/lib/responses.js'));
 
 app.tokens = [];
 
@@ -55,8 +55,7 @@ app.use((req, res, next) => {
     const valid = (provided && app.tokens.includes(req.headers.authorization.split('Bearer ')[1]));
 
     if(!provided || !valid) return res.status(403).json({
-        success: false,
-        message: (provided) ? 'Invalid token' : 'Required header: authorization',
+        error: (provided) ? 'Invalid token' : 'Required header: authorization',
     });
 
     next();
