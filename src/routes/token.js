@@ -1,7 +1,7 @@
 const path = require('path');
 const { randomBytes } = require('crypto');
 
-module.exports = (app) => {
+module.exports = (app, client) => {
 
     const PATH = __filename.split('/routes')[1].split('.js')[0];
 

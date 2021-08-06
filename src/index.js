@@ -5,6 +5,17 @@ require('dotenv').config();
 
 /*
 
+Connect to the PostgreSQL
+
+*/
+const { Client } = require('pg');
+
+// Connection information is retrieved from the environment variables
+const client = new Client();
+client.connect();
+
+/*
+
 Initialize the express application
 
 */
@@ -75,7 +86,7 @@ const mount = (dir) => {
 
         } else if(stats.isFile()) {
 
-            require(item_path)(app);
+            require(item_path)(app, client);
             console.log(`Mounted: ${ item_path.split('/routes')[1].split('.js')[0] }`);
 
         }
