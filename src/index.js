@@ -52,32 +52,39 @@ app.use((req, res, next) => {
 
 });
 
-// Generate new tokens for client applications
-app.post('/token', (req, res) => {
+/*
 
-    // Check if the correct password is provided
-    const provided = ('password' in req.body);
-    const valid = ('password' in req.body && req.body.password === process.env.PASSWORD);
+Automatically mount files in the routes directory
 
-    if(!provided || !valid) return res.status(403).json({
-        success: false,
-        message: (provided) ? 'Incorrect password' : 'Required json: password',
-    });
+*/
+const { readdirSync, lstatSync } = require('fs');
 
-    // Generate a token. Just in case, make sure it does not already exist
-    let token = randomBytes(32).toString('hex');
-    while(app.tokens.includes(token)) {
-        token = randomBytes(32).toString('hex');
+const mount = (dir) => {
+
+    const contents = readdirSync(dir);
+
+    for(const item of contents) {
+
+        const item_path = path.join(dir, item);
+        const stats = lstatSync(item_path);
+
+        if(stats.isDirectory()) {
+
+            // Recursively mount files inside of nested directories
+            mount(item_path);
+
+        } else if(stats.isFile()) {
+
+            require(item_path)(app);
+            console.log(`Mounted: ${ item_path.split('/routes')[1].split('.js')[0] }`);
+
+        }
+
     }
 
-    app.tokens.push(token);
+}
 
-    res.json({
-        success: true,
-        token: token,
-    });
-
-});
+mount(path.join(__dirname, './routes'));
 
 /*
 
