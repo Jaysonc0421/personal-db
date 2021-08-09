@@ -3,7 +3,8 @@ const { randomBytes } = require('crypto');
 
 module.exports = (app, client) => {
 
-    const PATH = __filename.split('/routes')[1].split('.js')[0];
+    let PATH = __filename.split('/routes')[1];
+    PATH = PATH.split(PATH.includes('index.js') ? 'index.js' : '.js');
 
     app.post(PATH, (req, res) => {
 
@@ -17,17 +18,12 @@ module.exports = (app, client) => {
 
         // Generate a token. Just in case, make sure it does not already exist
         let token = randomBytes(32).toString('hex');
-        while(app.tokens.includes(token)) {
-
-            token = randomBytes(32).toString('hex');
-
-        }
+        while(app.tokens.includes(token)) token = randomBytes(32).toString('hex');
 
         app.tokens.push(token);
 
-        res.json({ token: token });
+        return res.json({ token: token });
 
     });
-
 
 }
