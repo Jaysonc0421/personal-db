@@ -45,18 +45,29 @@ app.tokens = [];
 // This function is called when a request is made to any path on the server
 app.use((req, res, next) => {
 
-    // Make an exception for the endpoint used to request a token
-    if(req.originalUrl === '/token') return next();
+    try {
 
-    // For every other endpoint, check if a valid token is provided
-    const provided = ('authorization' in req.headers);
-    const valid = (provided && app.tokens.includes(req.headers.authorization.split('Bearer ')[1]));
+        // Make an exception for the endpoint used to request a token
+        if(req.originalUrl === '/token') return next();
 
-    if(!provided || !valid) return res.status(403).json({
-        error: (provided) ? 'Invalid token' : 'Required header: authorization',
-    });
+        // For every other endpoint, check if a valid token is provided
+        const provided = ('authorization' in req.headers);
+        const valid = (provided && app.tokens.includes(req.headers.authorization.split('Bearer ')[1]));
 
-    next();
+        if(!provided || !valid) return res.status(403).json({
+            error: (provided) ? 'Invalid token' : 'Required header: authorization',
+        });
+
+        next();
+
+    } catch (err) {
+
+        console.log(err);
+        res.status(500).json({
+            error: 'An internal server error has occured.',
+        });
+
+    }
 
 });
 
@@ -84,7 +95,9 @@ const mount = (dir) => {
         } else if(stats.isFile()) {
 
             require(item_path)(app, client);
-            console.log(`Mounted: ${ item_path.split('/routes')[1].split('.js')[0] }`);
+
+            const PATH = item_path.split('/routes')[1].split(item_path.includes('index.js') ? 'index.js' : '.js')[0];
+            console.log(`Mounted: ${ PATH }`);
 
         }
 
