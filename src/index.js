@@ -47,6 +47,9 @@ app.use((req, res, next) => {
 
     try {
 
+        // Do not require authentication unless the app is ran with APPENV set to production
+        if(!process.env.APPENV || process.env.APPENV !== 'production') return next();
+
         // Make an exception for the endpoint used to request a token
         if(req.originalUrl === '/token') return next();
 
@@ -113,6 +116,7 @@ Start listening
 
 */
 const PORT = process.env.PORT || 3001;
+const APP_ENV = process.env.APPENV || 'development';
 
 app.listen(PORT);
-console.log(`Listening on port ${ PORT }`);
+console.log(`\nListening on port ${ PORT }. \nRunning in ${ APP_ENV } environment.`);
