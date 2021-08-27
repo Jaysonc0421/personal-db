@@ -55,6 +55,11 @@ module.exports = (app, client) => {
         });
 
         const provided_columns = columns.filter(col => col in req.body);
+
+        if(provided_columns.length === 0) return res.status(400).json({
+            error: 'Atleast one value must be modified.',
+        });
+
         const values = provided_columns.map(col => format('%I = %L', col, req.body[col]));
         const query = format(`UPDATE contacts SET ${ values } WHERE id = %L RETURNING *;`, parseInt(req.params.id));
 
